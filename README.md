@@ -219,3 +219,5 @@ This does not work currently, and the scaffolding is planned to be revamped. For
 - How to disable pre-commit hooks (for single commit, and altogether)
 
 - if developing using a remote compute, what's a good setup? For example, use SSH, or use the Azure VSCode extension to connect to the remote? I find it using SSH works better when you need to resume work when to compute is off, and it works better with the dev container.
+
+- Ideally, there should be a set of steps to follow to set everything up and running from scratch. This means someone who doesn't have an AML workspace, no compute instance, no data, etc. and want to try this out, can just follow a list of steps listed in this document to get everything up and running.
