@@ -45,7 +45,7 @@ new-exp: check-arg-exp
 run_name:=$(exp)_$(shell date +%Y%m%d_%H%M%S)
 isolate-run: run_dir=$(ISOLATED_RUNS_PATH)/$(run_name)
 isolate-run: check-arg-exp check-exp-exists
-	@echo "Making expierment dir: '$(run_dir)'"
+	@echo "Making experiment dir: '$(run_dir)'"
 	@mkdir -p "$(run_dir)"
 	@cp -r  $(CODE_PATH)/$(exp) $(run_dir)
 	@cp -r  $(CODE_PATH)/common $(run_dir)
