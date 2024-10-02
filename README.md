@@ -16,17 +16,22 @@ git clone -c core.symlinks=true <Repo URL>
 ```
 
 ## Navigation
-1. [Features overview](#features-overview)
-2. [Getting started](#getting-started)
-   1. [Requirements](#requirements)
-   2. [Setting up new project](#setting-up-new-project)
-   3. [Creating experiments](#creating-experiments)
-3. [Concepts](#concepts)
-   1. [Assumptions](#assumptions)
-   2. [Expectations](#expectations)
-   3. [Project structure](#project-structure)
-   4. [Makefile](#makefile)
-   5. [Common dependencies](#common-dependencies)
+
+- [AzureML Scaffolding](#azureml-scaffolding)
+  - [Cloning this repository](#cloning-this-repository)
+  - [Navigation](#navigation)
+  - [Features overview](#features-overview)
+  - [Getting started](#getting-started)
+    - [Requirements](#requirements)
+    - [Setting up new project](#setting-up-new-project)
+    - [Creating experiments](#creating-experiments)
+    - [Developing inside a dev container with VSCode](#developing-inside-a-dev-container-with-vscode)
+  - [Concepts](#concepts)
+    - [Assumptions](#assumptions)
+    - [Expectations](#expectations)
+    - [Project structure](#project-structure)
+    - [Makefile](#makefile)
+    - [Common dependencies](#common-dependencies)
 
 
 ## Features overview
@@ -49,13 +54,17 @@ git clone -c core.symlinks=true <Repo URL>
 
 Some requirements could be flexible to other workflows and are mentioned as potential alternatives. Nevertheless, they would require some extra effort and will not work with the `Makefile` as it is. We may provide examples on how that would look like in the future.
 
-- **Azure ML workspace** - For anything to work, you need to have an Azure ML workspace configured and, of course, and Azure account with access to that workspace. By configured, we basically mean created and at least one compute cluster defined to be able to run things there. It is likely you also need to have a registered dataset available. General documentation can be found here: https://docs.microsoft.com/en-us/azure/machine-learning/.
+- **Azure ML workspace** - For anything to work, you need to have an Azure ML workspace configured and, of course, and Azure account with access to that workspace. By configured, we basically mean
+  - To create an Azure ML workspace: <https://learn.microsoft.com/en-us/azure/machine-learning/quickstart-create-resources?view=azureml-api-2#create-the-workspace>
+  - Have at least one compute cluster defined to be able to run things there: <https://learn.microsoft.com/en-us/azure/machine-learning/how-to-create-compute-instance?view=azureml-api-2&tabs=python>
+  - It is likely you also need to have a registered dataset available
+  - General documentation can be found here: <https://docs.microsoft.com/en-us/azure/machine-learning/>.
 
 - **Azure ML CLI v2** - We recommend to interface with Azure ML through the CLI (rather than the python SDK) because it makes the separation between ML code and platform specific infrastructure much clearer (CLI uses YAMLs and not python code). Potential alternative: Python SDK.
 
     1. Follow the instructions in https://docs.microsoft.com/en-us/cli/azure/install-azure-cli to install the generic Azure CLI.
     2. Run the command `az extension add --name ml` in your command line to install the ML v2 extension.
-    3. Run `az login` to make sure you are logged in your Azure account.
+    3. Run `az login` to make sure you are logged in your Azure account. Make sure to select the `tenant_id` that is associated with your Azure ML workspace.
     4. Run `az account set --name <subscription_name>` to make your CLI point to the subscription that owns the Azure ML workspace. If you go to the Azure ML studio at https://ml.azure.com and navigate to the workspace, the name of the subscription appears at the top right of the screen.
     5. You are set to go!
 
@@ -89,10 +98,19 @@ When creating a new experiment, there are a few things you need to set-up before
 1. Modify your `environment/environment.yaml` (and `Dockerfile` context if needed) to represent the environment you need.
 2. Modify the `experiment_name` property in the `azure-ml-job.yaml` to match your experiment.
 3. Modify the `compute` property in the `azure-ml-job.yaml` to point to one of the clusters in your Azure Machine Learning workspace.
-4. Run `make build-exp exp=<your_experiment_name>` to build the Docker image so you can run the local commands. If you do not do this manually, any local command will trigger this first.
+4. Run `make build-exp exp=<your_experiment_name>` to build the Docker image so you can run the local commands. If you do not do this manually, any local command will trigger this first. Reminder: <your_experiment_name> here is the name of the folder of your experiment, and in this example, "example_experiment".
 5. If you want to use the example command in `azure-ml-job.yaml` to try things work, modify the `inputs.data_path.path` to point to one of your datasets in the workspace so the job does not crash.
 
 After that, you are ready to start modifying your `main.py` (and the `command` and `inputs` in the `azure-ml-job.yaml` to match it) and you will be set to start experimenting. You can also modify the `local.py` for faster local experimentation. You can just import the functionality of `main.py` to run a local experiment or you may want to run smaller pieces of the code while you develop or to debug them.
+
+### Developing inside a dev container with VSCode
+
+Developing inside a [dev container](https://code.visualstudio.com/docs/devcontainers/containers) is a great way to ensure that your development environment is the same as what will be deployed. This also facilitates running your code with the VSCode debugger.
+
+To get started:
+
+- Then, install docker and the required extensions [here](https://code.visualstudio.com/docs/devcontainers/containers#_getting-started).
+- Follow the instructions [here](https://github.com/bepuca/azureml-scaffolding-extensions/tree/main/extensions/devcontainer)
 
 ## Concepts
 
@@ -105,7 +123,7 @@ While we aim to provide a template as non-assuming as possible, we did bake a fe
 2. You tackle your machine learning problem through independent, reproducible experiments.
 3. You use Docker for your environments to ensure reproducibility as much as possible and to avoid surprises in production or differences across machines.
 4. You format and lint your code as soon as possible to ensure legibility and catch small bugs early.
-5. You use a UNIX-based machine (Linux, macOS, Windows with WSL or [AzureML Compute Instance](https://docs.microsoft.com/en-us/azure/machine-learning/concept-compute-instance)). This is not completely requried, but the main driver of this project is `Makefile` and it is hard to work with it on Windows. For Windows users we recommend setting up Azure ML Compute instance as a dev environment and use this scaffolding from there. There are tools for running `make` in Windows but we do not guarantee our file to work.
+5. You use a UNIX-based machine (Linux, macOS, Windows with WSL or [AzureML Compute Instance](https://docs.microsoft.com/en-us/azure/machine-learning/concept-compute-instance)). This is not completely requried, but the main driver of this project is `Makefile` and it is hard to work with it on Windows. For Windows users we recommend setting up Azure ML Compute instance and use this scaffolding from there. There are tools for running `make` in Windows but we do not guarantee our file to work.
 
 ### Expectations
 [[back to the top]](#navigation)
@@ -182,6 +200,22 @@ This will display the available commands with a short description of them. For m
 ### Common dependencies
 [[back to the top]](#navigation)
 
-Most projects end up needing to reuse some code across experiments. While the usual way of doing it is through registering packages somewhere, we believe it introduces a signficant overhead, specially in the initial stages of a project where things change very quickly. Therefore, the solution we propose is to have a special folder at the experiment level called `common` where you should put all the code that is meant to be used by more than one experiment.
+~~Most projects end up needing to reuse some code across experiments. While the usual way of doing it is through registering packages somewhere, we believe it introduces a signficant overhead, specially in the initial stages of a project where things change very quickly. Therefore, the solution we propose is to have a special folder at the experiment level called `common` where you should put all the code that is meant to be used by more than one experiment.~~
 
-Then, the `Makefile` ensures `common` is available and `import common` works at runtime both when running `make local` (by mounting the folder appropiately in the docker contaienr) and when running `make job` (by isolating the code for the run, which includes `common`, before submitting it to AzureML).
+~~Then, the `Makefile` ensures `common` is available and `import common` works at runtime both when running `make local` (by mounting the folder appropiately in the docker contaienr) and when running `make job` (by isolating the code for the run, which includes `common`, before submitting it to AzureML).~~
+
+This does not work currently, and the scaffolding is planned to be revamped. For now, you will need to copy the code manually to the experiments that need it.
+
+
+####### Other stuffs
+
+- how to use the dataset: Create a snippet to register dataset, and how the dataset will be used in the main script.
+
+- compute instance for the job: Should use a compute cluster instead, because
+  - with a compute instance you need to manually start it before submitting a job
+  - suitable for multi-node jobs
+  - ...
+
+- How to disable pre-commit hooks (for single commit, and altogether)
+
+- if developing using a remote compute, what's a good setup? For example, use SSH, or use the Azure VSCode extension to connect to the remote? I find it using SSH works better when you need to resume work when to compute is off, and it works better with the dev container.
