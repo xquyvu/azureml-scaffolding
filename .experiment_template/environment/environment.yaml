@@ -1,3 +1,4 @@
+# This should list all the dependencies required for the experiment to run
 channels:
   - conda-forge
 dependencies:

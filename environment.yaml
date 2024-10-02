@@ -1,4 +1,5 @@
-# Environment for project ops (format, lint, docs)
+# Environment for project ops (format, lint, docs). Dependencies required to run the
+# experiment should go to the `environment.yml` file in the experiment folder.
 name: <project_name>
 channels:
   - conda-forge

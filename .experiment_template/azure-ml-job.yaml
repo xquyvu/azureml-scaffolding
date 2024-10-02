@@ -11,8 +11,10 @@ command: >-
 
 inputs:
   data_path:
-    # Only works if dataset created using Azure ML CLI v2; run `az ml data create --help` to see how
-    #   YAML schema: https://learn.microsoft.com/en-us/azure/machine-learning/reference-yaml-data
+    # The dataset needs to be created and registered as a data asset in Azure ML. An
+    # easy way to get the data path is via Azure Portal: Navigate to the Azure ML
+    # workspace > Data tab, then click on the dataset. It should be under the Named
+    # asset URI field.
     type: uri_folder  # default, can be changed to `uri_file` if data_path points to a file
     path: azureml:<azure-ml-dataset-name>:<azure-ml-dataset-version>
   greeting: "Hello"
