@@ -136,6 +136,11 @@ AzureML Scaffolding enables you to:
    && rm -rf temp.zip azureml-scaffolding-main
    ```
 
+   This method lets you download the scaffolding code without deleting your existing
+   files, which is especially helpful when you already have some code in your project.
+   It is also not recommended to git clone this repo, as it will cause your code repo to
+   be linked with AzureML Scaffolding repo, which is not desired.
+
 2. Modify the [`pyproject.toml`](pyproject.toml) for your project.
    1. Get familiar with [uv] if it is your first time working with it.
    2. Modify the `name`, `version` and `description` to match your project's.
